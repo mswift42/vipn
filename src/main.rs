@@ -1,6 +1,22 @@
 extern crate select;
+use select::predicate::{Predicate, Class};
 
 type IplayerDocument = select::document::Document;
+
+// type IplayerNode<'a> = select::node::Node<'a>;
+pub struct IplayerNode<'a> {
+    pub node: select::node::Node<'a>
+}
+
+impl<'a> IplayerNode<'a> {
+    fn find_title(&self) -> String {
+       self.node.find(Class("secondary").descendant(Class("title")))
+           .next()
+           .unwrap()
+           .text()
+    }
+}
+
 
 pub struct Programme<'a> {
     pub title: &'a str,
@@ -12,6 +28,20 @@ pub struct Programme<'a> {
     pub index: usize,
 }
 
+
+
 fn main() {
     println!("Hello, world!");
+}
+
+#[cfg(test)]
+mod tests {
+   use super::*;
+    use select::predicate::Name;
+
+    #[test]
+    fn test_document() {
+        let doc =  IplayerDocument::from(include_str!("food1.html"));
+        assert_eq!(&doc.find(Name("h1")).next().unwrap().text(), " Food  - A-Z ");
+    }
 }
