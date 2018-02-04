@@ -17,6 +17,17 @@ impl<'a> IplayerNode<'a> {
     }
 }
 
+struct IplayerSelection<'a> {
+    programme: Option<Programme<'a>>,
+    prog_page: Option<String>,
+}
+
+impl<'a> IplayerSelection<'a> {
+    fn new(inode: &IplayerNode) {
+
+    }
+}
+
 
 pub struct Programme<'a> {
     pub title: &'a str,
@@ -41,7 +52,7 @@ mod tests {
 
     #[test]
     fn test_document() {
-        let doc =  IplayerDocument::from(include_str!("food1.html"));
+        let doc =  IplayerDocument::from(include_str!("../testhtml/food1.html"));
         assert_eq!(&doc.find(Name("h1")).next().unwrap().text(), " Food  - A-Z ");
         let dn = doc.find(Class("list-item-inner")).next().unwrap();
         let inode  = IplayerNode { node: dn };
