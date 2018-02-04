@@ -43,5 +43,8 @@ mod tests {
     fn test_document() {
         let doc =  IplayerDocument::from(include_str!("food1.html"));
         assert_eq!(&doc.find(Name("h1")).next().unwrap().text(), " Food  - A-Z ");
+        let dn = doc.find(Class("list-item-inner")).next().unwrap();
+        let inode  = IplayerNode { node: dn };
+        assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
     }
 }
