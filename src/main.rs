@@ -19,12 +19,27 @@ impl<'a> IplayerNode<'a> {
 
 struct IplayerSelection<'a> {
     programme: Option<Programme<'a>>,
-    prog_page: Option<String>,
+    extra_prog_page: Option<&'a str>,
 }
 
 impl<'a> IplayerSelection<'a> {
-    fn new(inode: &IplayerNode) {
-
+    fn new(inode: &IplayerNode) -> IplayerSelection<'a> {
+        let extra_prog_page = inode.node.find(Class("view-more-container"))
+            .next()
+            .unwrap()
+            .attr("href")
+            .unwrap();
+        if extra_prog_page != "" {
+            IplayerSelection {
+                programme: None,
+                extra_prog_page: Some(extra_prog_page.to_string())
+            }
+        } else {
+            IplayerSelection {
+                programme: Some(Programme{}),
+                extra_prog_page: None
+            }
+        }
     }
 }
 
@@ -37,6 +52,12 @@ pub struct Programme<'a> {
     pub thumbnail: &'a str,
     pub url: &'a str,
     pub index: usize,
+}
+
+impl<'a> Programme<'a> {
+    fn new(inode: &IplayerNode) {
+
+    }
 }
 
 
