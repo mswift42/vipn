@@ -9,12 +9,23 @@ pub struct IplayerNode<'a> {
 }
 
 impl<'a> IplayerNode<'a> {
-    fn find_title(&self) -> String {
+    fn find_title(&self) -> &'a str {
        self.node.find(Class("secondary").descendant(Class("title")))
            .next()
            .unwrap()
            .text()
+           .as_ref()
     }
+
+    fn find_subtitle(&self) -> Option<&'a str> {
+        let sub = self.node.find(Class("secondary").descendant(Class("subtitle")))
+            .next();
+        match sub {
+            None => None,
+            Some(txt) => Some(txt.text().as_ref()),
+        }
+    }
+
 }
 
 struct IplayerSelection<'a> {
@@ -32,7 +43,7 @@ impl<'a> IplayerSelection<'a> {
         if extra_prog_page != "" {
             IplayerSelection {
                 programme: None,
-                extra_prog_page: Some(extra_prog_page.to_string())
+                extra_prog_page: Some(extra_prog_page)
             }
         } else {
             IplayerSelection {
