@@ -39,6 +39,20 @@ impl<'a> IplayerNode<'a> {
         }
     }
 
+    fn find_thumbnail(&self) -> &'a str {
+        self.node.find(Class("rs-image")
+            .descendant(Name("pictrue")
+                .descendant(Name("source"))))
+            .next()
+            .unwrap()
+            .attr("srcset")
+            .unwrap_or("")
+    }
+
+    fn end_pid(&self) -> &'a str {
+
+    }
+
 }
 
 struct IplayerSelection<'a> {
