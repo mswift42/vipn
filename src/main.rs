@@ -1,5 +1,5 @@
 extern crate select;
-use select::predicate::{Predicate, Class};
+use select::predicate::{Predicate, Class, Name};
 
 type IplayerDocument = select::document::Document;
 
@@ -23,6 +23,19 @@ impl<'a> IplayerNode<'a> {
         match sub {
             None => None,
             Some(txt) => Some(txt.text().as_ref()),
+        }
+    }
+
+    fn find_url(&self) -> &'a str {
+        let path = self.node.find(Name("a"))
+            .next()
+            .unwrap()
+            .attr("href")
+            .unwrap();
+        if path.starts_with("http://www.bbc.co.uk") {
+            path
+        } else {
+            &(String::from("http://www.bbc.co.uk") + path)
         }
     }
 
