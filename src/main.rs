@@ -9,33 +9,33 @@ pub struct IplayerNode<'a> {
 }
 
 impl<'a> IplayerNode<'a> {
-    fn find_title(&self) -> &'a str {
+    fn find_title(&self) -> String {
        self.node.find(Class("secondary").descendant(Class("title")))
            .next()
            .unwrap()
            .text()
-           .as_ref()
     }
 
-    fn find_subtitle(&self) -> Option<&'a str> {
-        let sub = self.node.find(Class("secondary").descendant(Class("subtitle")))
+    fn find_subtitle(&self) -> Option<String> {
+        let sub = self.node.find(Class("secondary")
+            .descendant(Class("subtitle")))
             .next();
         match sub {
             None => None,
-            Some(txt) => Some(txt.text().as_ref()),
+            Some(txt) => Some(txt.text()),
         }
     }
 
-    fn find_url(&self) -> &'a str {
+    fn find_url(&self) -> String {
         let path = self.node.find(Name("a"))
             .next()
             .unwrap()
             .attr("href")
             .unwrap();
         if path.starts_with("http://www.bbc.co.uk") {
-            path
+            path.to_string()
         } else {
-            &(String::from("http://www.bbc.co.uk") + path)
+            "http://www.bbc.co.uk".to_string() + path
         }
     }
 
@@ -60,12 +60,11 @@ impl<'a> IplayerNode<'a> {
         }
     }
 
-    fn find_synopsis(&self) -> &'a str {
+    fn find_synopsis(&self) -> String {
         self.node.find(Class("synopsis"))
             .next()
             .unwrap()
             .text()
-            .as_ref()
     }
 
 }
@@ -76,7 +75,7 @@ struct IplayerSelection<'a> {
 }
 
 impl<'a> IplayerSelection<'a> {
-    fn new(inode: &IplayerNode) -> IplayerSelection<'a> {
+    fn new(inode: &'a IplayerNode) -> IplayerSelection<'a> {
         let extra_prog_page = inode.node.find(Class("view-more-container"))
             .next()
             .unwrap()
@@ -89,7 +88,7 @@ impl<'a> IplayerSelection<'a> {
             }
         } else {
             IplayerSelection {
-                programme: Some(Programme{}),
+                programme: Some(Programme::new(inode)),
                 extra_prog_page: None
             }
         }
@@ -97,19 +96,35 @@ impl<'a> IplayerSelection<'a> {
 }
 
 
+#[derive(Debug)]
 pub struct Programme<'a> {
-    pub title: &'a str,
-    pub subtitle: Option<&'a str>,
-    pub synopsis: &'a str,
+    pub title: String,
+    pub subtitle: Option<String>,
+    pub synopsis: String,
     pub pid: &'a str,
     pub thumbnail: &'a str,
-    pub url: &'a str,
+    pub url: String,
     pub index: usize,
 }
 
 impl<'a> Programme<'a> {
-    fn new(inode: &IplayerNode) {
-
+    fn new(inode: &'a IplayerNode) -> Programme<'a> {
+        let title = inode.find_title();
+        let subtitle = inode.find_subtitle();
+        let synopsis = inode.find_synopsis();
+        let pid = inode.find_pid();
+        let thumbnail = inode.find_thumbnail();
+        let url = inode.find_url();
+        let index = 0;
+        Programme {
+            title,
+            subtitle,
+            synopsis,
+            pid,
+            thumbnail,
+            url,
+            index,
+        }
     }
 }
 
@@ -131,5 +146,7 @@ mod tests {
         let dn = doc.find(Class("list-item-inner")).next().unwrap();
         let inode  = IplayerNode { node: dn };
         assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
+        let prog = Programme::new(&inode);
+        println!("{:?}", prog);
     }
 }
