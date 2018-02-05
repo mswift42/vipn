@@ -49,8 +49,23 @@ impl<'a> IplayerNode<'a> {
             .unwrap_or("")
     }
 
-    fn end_pid(&self) -> &'a str {
+    fn find_pid(&self) -> &'a str {
+        match self.node.attr("data-ip-id") {
+            None => self.node.find(Class("list-item-inner").descendant(Name("a")))
+                .next()
+                .unwrap()
+                .attr("data-episode-id")
+                .unwrap(),
+            Some(pid) => pid,
+        }
+    }
 
+    fn find_synopsis(&self) -> &'a str {
+        self.node.find(Class("synopsis"))
+            .next()
+            .unwrap()
+            .text()
+            .as_ref()
     }
 
 }
