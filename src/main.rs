@@ -1,8 +1,19 @@
 extern crate select;
 use select::predicate::{Predicate, Class, Name};
 
-type IplayerDocument = select::document::Document;
+pub struct IplayerDocument {
+    idoc: select::document::Document
+}
 
+impl IplayerDocument {
+    fn programmes(&self) -> Vec<Programme> {
+       let inode = IplayerNode {
+           node: self.idoc.find(Class("list-item-inner"))
+       };
+        inode.node.map(|node| Programme::new(&node))
+            .collect()
+    }
+}
 // type IplayerNode<'a> = select::node::Node<'a>;
 pub struct IplayerNode<'a> {
     pub node: select::node::Node<'a>
