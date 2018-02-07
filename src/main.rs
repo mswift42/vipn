@@ -7,10 +7,8 @@ pub struct IplayerDocument {
 
 impl IplayerDocument {
     fn programmes(&self) -> Vec<Programme> {
-       let inode = IplayerNode {
-           node: self.idoc.find(Class("list-item-inner"))
-       };
-        inode.node.map(|node| Programme::new(&node))
+           let node =  self.idoc.find(Class("list-item-inner"));
+        node.map(|node| Programme::new(&IplayerNode{node: node}))
             .collect()
     }
 }
