@@ -1,4 +1,5 @@
 extern crate select;
+
 use select::predicate::{Predicate, Class, Name};
 
 pub struct IplayerDocument {
@@ -7,11 +8,16 @@ pub struct IplayerDocument {
 
 impl IplayerDocument {
     fn programmes(&self) -> Vec<Programme> {
-           let node =  self.idoc.find(Class("list-item-inner"));
-        node.map(|node| Programme::new(&IplayerNode{node: node}))
+        self.idoc.find(Class("list-item-inner")).into_iter()
+            .map(|node| {
+                let inode = IplayerNode { node };
+                let prog = Programme::new(inode);
+                prog
+            })
             .collect()
     }
 }
+
 // type IplayerNode<'a> = select::node::Node<'a>;
 pub struct IplayerNode<'a> {
     pub node: select::node::Node<'a>
@@ -19,10 +25,10 @@ pub struct IplayerNode<'a> {
 
 impl<'a> IplayerNode<'a> {
     fn find_title(&self) -> String {
-       self.node.find(Class("secondary").descendant(Class("title")))
-           .next()
-           .unwrap()
-           .text()
+        self.node.find(Class("secondary").descendant(Class("title")))
+            .next()
+            .unwrap()
+            .text()
     }
 
     fn find_subtitle(&self) -> Option<String> {
@@ -40,7 +46,7 @@ impl<'a> IplayerNode<'a> {
             .next()
             .unwrap()
             .attr("href")
-            .unwrap();
+            .unwrap_or("");
         if path.starts_with("http://www.bbc.co.uk") {
             path.to_string()
         } else {
@@ -64,7 +70,7 @@ impl<'a> IplayerNode<'a> {
                 .next()
                 .unwrap()
                 .attr("data-episode-id")
-                .unwrap(),
+                .unwrap_or(""),
             Some(pid) => pid,
         }
     }
@@ -75,7 +81,6 @@ impl<'a> IplayerNode<'a> {
             .unwrap()
             .text()
     }
-
 }
 
 struct IplayerSelection<'a> {
@@ -84,7 +89,7 @@ struct IplayerSelection<'a> {
 }
 
 impl<'a> IplayerSelection<'a> {
-    fn new(inode: &'a IplayerNode) -> IplayerSelection<'a> {
+    fn new(inode: IplayerNode) -> IplayerSelection {
         let extra_prog_page = inode.node.find(Class("view-more-container"))
             .next()
             .unwrap()
@@ -93,12 +98,12 @@ impl<'a> IplayerSelection<'a> {
         if extra_prog_page != "" {
             IplayerSelection {
                 programme: None,
-                extra_prog_page: Some(extra_prog_page)
+                extra_prog_page: Some(extra_prog_page),
             }
         } else {
             IplayerSelection {
                 programme: Some(Programme::new(inode)),
-                extra_prog_page: None
+                extra_prog_page: None,
             }
         }
     }
@@ -117,7 +122,7 @@ pub struct Programme<'a> {
 }
 
 impl<'a> Programme<'a> {
-    fn new(inode: &'a IplayerNode) -> Programme<'a> {
+    fn new(inode: IplayerNode) -> Programme {
         let title = inode.find_title();
         let subtitle = inode.find_subtitle();
         let synopsis = inode.find_synopsis();
@@ -138,24 +143,24 @@ impl<'a> Programme<'a> {
 }
 
 
-
 fn main() {
     println!("Hello, world!");
 }
 
 #[cfg(test)]
 mod tests {
-   use super::*;
+    use super::*;
     use select::predicate::Name;
 
     #[test]
     fn test_document() {
-        let doc =  IplayerDocument::from(include_str!("../testhtml/food1.html"));
-        assert_eq!(&doc.find(Name("h1")).next().unwrap().text(), " Food  - A-Z ");
-        let dn = doc.find(Class("list-item-inner")).next().unwrap();
-        let inode  = IplayerNode { node: dn };
+        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
+        let idoc = IplayerDocument { idoc: doc };
+        assert_eq!(&idoc.idoc.find(Name("h1")).next().unwrap().text(), " Food  - A-Z ");
+        let dn = &idoc.idoc.find(Class("list-item-inner")).next().unwrap();
+        let inode = IplayerNode { node: *dn };
         assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
-        let prog = Programme::new(&inode);
-        println!("{:?}", prog);
+        assert_eq!(inode.find_subtitle(), Some("Reversioned Series: 16. Letter P".to_string()));
+//        assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b04w5mf0/the-a-to-z-of-tv-cooking-reversioned-series-16-letter-p".to_string());
     }
 }
