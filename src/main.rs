@@ -1,5 +1,5 @@
+#![feature(custom_attribute)]
 extern crate select;
-
 use select::predicate::{Predicate, Class, Name};
 
 pub struct IplayerDocument {
@@ -168,6 +168,6 @@ mod tests {
         let prog = Programme::new(inode);
         assert_eq!(prog.title, "The A to Z of TV Cooking");
         assert_eq!(prog.pid, "b04vjm8d");
-        assert_eq!(prog.synopsis, "");
+        assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
     }
 }
