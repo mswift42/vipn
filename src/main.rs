@@ -8,7 +8,7 @@ pub struct IplayerDocument {
 
 impl IplayerDocument {
     fn programmes(&self) -> Vec<Programme> {
-        self.idoc.find(Class("list-item-inner")).into_iter()
+        self.idoc.find(Class("list-item-inner"))
             .map(|node| {
                 let inode = IplayerNode { node };
                 let prog = Programme::new(inode);
@@ -152,6 +152,7 @@ mod tests {
     use super::*;
     use select::predicate::Name;
 
+    #[rustfmt_skip]
     #[test]
     fn test_document() {
         let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
@@ -161,8 +162,12 @@ mod tests {
         let inode = IplayerNode { node: *dn };
         assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
         assert_eq!(inode.find_subtitle(), Some("Reversioned Series: 16. Letter P".to_string()));
-//        assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b04w5mf0/the-a-to-z-of-tv-cooking-reversioned-series-16-letter-p".to_string());
+        assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b04w5mf0/the-a-to-z-of-tv-cooking-reversioned-series-16-letter-p".to_string());
         assert_eq!(inode.find_thumbnail(), "https://ichef.bbci.co.uk/images/ic/336x189/p02dd1vv.jpg".to_string());
         assert_eq!(inode.find_pid(), "b04vjm8d".to_string());
+        let prog = Programme::new(inode);
+        assert_eq!(prog.title, "The A to Z of TV Cooking");
+        assert_eq!(prog.pid, "b04vjm8d");
+        assert_eq!(prog.synopsis, "");
     }
 }
