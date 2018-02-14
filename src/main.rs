@@ -1,5 +1,6 @@
 #![feature(custom_attribute)]
 extern crate select;
+
 use select::predicate::{Predicate, Class, Name};
 
 pub struct IplayerDocument {
@@ -7,7 +8,7 @@ pub struct IplayerDocument {
 }
 
 impl IplayerDocument {
-    fn programmes(&self) -> Vec<Programme> {
+    pub fn programmes(&self) -> Vec<Programme> {
         self.idoc.find(Class("list-item-inner"))
             .map(|node| {
                 let inode = IplayerNode { node };
@@ -169,5 +170,11 @@ mod tests {
         assert_eq!(prog.title, "The A to Z of TV Cooking");
         assert_eq!(prog.pid, "b04vjm8d");
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
+//        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
+//        let idoc = IplayerDocument { idoc: doc };
+        let programmes = idoc.programmes();
+        assert_eq!(programmes.len(), 17);
+        assert_eq!(programmes[0].title, "The A to Z of TV Cooking");
+        assert_eq!(programmes[1].title, "Fanny Cradock Cooks for Christmas");
     }
 }
