@@ -23,6 +23,10 @@ struct MainCategoryDocument<'a> {
     idocs: Vec<&'a IplayerDocument>
 }
 
+struct Category<'a> {
+    name: String,
+    programmes: Vec<&'a Programme<'a>>,
+}
 
 
 // type IplayerNode<'a> = select::node::Node<'a>;
