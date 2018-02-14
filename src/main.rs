@@ -19,6 +19,10 @@ impl IplayerDocument {
     }
 }
 
+struct mainCategoryDocument<'a> {
+    idocs: Vec<&'a IplayerDocument>
+}
+
 // type IplayerNode<'a> = select::node::Node<'a>;
 pub struct IplayerNode<'a> {
     pub node: select::node::Node<'a>
