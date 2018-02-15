@@ -19,6 +19,7 @@ impl IplayerDocument {
     }
 }
 
+
 struct MainCategoryDocument<'a> {
     idocs: Vec<&'a IplayerDocument>
 }
@@ -105,7 +106,7 @@ impl<'a> IplayerSelection<'a> {
             .next()
             .unwrap()
             .attr("href")
-            .unwrap();
+            .unwrap_or("");
         if extra_prog_page != "" {
             IplayerSelection {
                 programme: None,
@@ -186,5 +187,15 @@ mod tests {
         assert_eq!(programmes.len(), 17);
         assert_eq!(programmes[0].title, "The A to Z of TV Cooking");
         assert_eq!(programmes[1].title, "Fanny Cradock Cooks for Christmas");
+    }
+
+    #[test]
+    fn test_iplayer_selection() {
+        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
+        let idoc = IplayerDocument { idoc: doc };
+        let dn = &idoc.idoc.find(Class("list-item-inner")).next().unwrap();
+        let inode = IplayerNode { node: *dn };
+        let isel = IplayerSelection::new(inode);
+        assert_eq!(isel.extra_prog_page, None);
     }
 }
