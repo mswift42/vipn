@@ -19,6 +19,11 @@ impl IplayerDocument {
     }
 }
 
+pub struct ProgrammeDB {
+    pub categories: Vec<Category>,
+    pub saved: DateTime<Utc>,
+}
+
 
 struct MainCategoryDocument<'a> {
     idocs: Vec<&'a IplayerDocument>
@@ -195,7 +200,12 @@ mod tests {
         let idoc = IplayerDocument { idoc: doc };
         let dn = &idoc.idoc.find(Class("list-item-inner")).next().unwrap();
         let inode = IplayerNode { node: *dn };
+        assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
         let isel = IplayerSelection::new(inode);
-        assert_eq!(isel.extra_prog_page, None);
+        let ip = isel.extra_prog_page.unwrap();
+        assert_eq!(ip, "");
+
+
+
     }
 }
