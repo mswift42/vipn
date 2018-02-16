@@ -1,5 +1,6 @@
 #![feature(custom_attribute)]
 extern crate select;
+extern crate chrono;
 
 use select::predicate::{Predicate, Class, Name};
 
@@ -19,8 +20,8 @@ impl IplayerDocument {
     }
 }
 
-pub struct ProgrammeDB {
-    pub categories: Vec<Category>,
+pub struct ProgrammeDB<'a> {
+    pub categories: Vec<Category<'a>>,
     pub saved: DateTime<Utc>,
 }
 

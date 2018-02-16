@@ -6,3 +6,4 @@ authors = ["mswift42 <martin.haesler@gmail.com>"]
 [dependencies]
 select = "0.4.2"
 reqwest = "0.8.4"
+chrono = "0.4.0"
