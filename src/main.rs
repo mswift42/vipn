@@ -1,6 +1,8 @@
 #![feature(custom_attribute)]
 extern crate select;
 extern crate chrono;
+extern crate serde;
+extern crate serde_json;
 
 use select::predicate::{Predicate, Class, Name};
 use chrono::prelude::*;
@@ -25,6 +27,16 @@ pub struct ProgrammeDB<'a> {
     pub categories: Vec<Category<'a>>,
     pub saved: DateTime<Utc>,
 }
+
+impl<'a> ProgrammeDB<'a> {
+    pub fn new(cats: Vec<Category<'a>>) -> ProgrammeDB {
+        ProgrammeDB {
+            categories: cats,
+            saved: Utc::now(),
+        }
+    }
+}
+
 
 
 
