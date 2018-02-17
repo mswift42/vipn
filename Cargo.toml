@@ -6,4 +6,7 @@ authors = ["mswift42 <martin.haesler@gmail.com>"]
 [dependencies]
 select = "0.4.2"
 reqwest = "0.8.4"
-chrono = "0.4.0"
+serde = "1.0.14"
+serde_json = "1.0"
+serde_derive = "1.0"
+chrono = {version = "0.4.0", features = ["serde"]

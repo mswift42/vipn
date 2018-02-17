@@ -3,6 +3,7 @@ extern crate select;
 extern crate chrono;
 
 use select::predicate::{Predicate, Class, Name};
+use chrono::prelude::*;
 
 pub struct IplayerDocument {
     idoc: select::document::Document
@@ -26,11 +27,12 @@ pub struct ProgrammeDB<'a> {
 }
 
 
+
 struct MainCategoryDocument<'a> {
     idocs: Vec<&'a IplayerDocument>
 }
 
-struct Category<'a> {
+pub struct Category<'a> {
     name: String,
     programmes: Vec<&'a Programme<'a>>,
 }
