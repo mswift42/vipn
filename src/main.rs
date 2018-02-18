@@ -210,7 +210,7 @@ mod tests {
         let inode = IplayerNode { node: *dn };
         assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
         let isel = IplayerSelection::new(inode);
-        let ip = isel.extra_prog_page.unwrap();
-        assert_eq!(ip, "");
+        let ip = isel.programme.unwrap();
+        assert_eq!(ip.title, "The A to Z of TV Cooking");
     }
 }
