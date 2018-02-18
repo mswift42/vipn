@@ -202,6 +202,7 @@ mod tests {
         assert_eq!(programmes[1].title, "Fanny Cradock Cooks for Christmas");
     }
 
+    #[rustfmt_skip]
     #[test]
     fn test_iplayer_selection() {
         let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
@@ -212,5 +213,10 @@ mod tests {
         let isel = IplayerSelection::new(inode);
         let ip = isel.programme.unwrap();
         assert_eq!(ip.title, "The A to Z of TV Cooking");
+        // let isel = IplayerSelection::new(in2);
+        let n2 = &idoc.idoc.find(Class("list-item-inner")).nth(1).unwrap();
+        let in2 = IplayerNode { node: *n2 };
+        let isel = IplayerSelection::new(in2);
+        assert_eq!(isel.extra_prog_page.unwrap(), "/iplayer/episodes/p05jv04g");
     }
 }
