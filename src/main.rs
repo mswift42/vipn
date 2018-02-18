@@ -38,8 +38,6 @@ impl<'a> ProgrammeDB<'a> {
 }
 
 
-
-
 struct MainCategoryDocument<'a> {
     idocs: Vec<&'a IplayerDocument>
 }
@@ -122,21 +120,16 @@ struct IplayerSelection<'a> {
 
 impl<'a> IplayerSelection<'a> {
     fn new(inode: IplayerNode) -> IplayerSelection {
-        let extra_prog_page = inode.node.find(Class("view-more-container"))
-            .next()
-            .unwrap()
-            .attr("href")
-            .unwrap_or("");
-        if extra_prog_page != "" {
-            IplayerSelection {
-                programme: None,
-                extra_prog_page: Some(extra_prog_page),
-            }
-        } else {
-            IplayerSelection {
+        match inode.node.find(Class("view-more-container"))
+            .next() {
+            None => IplayerSelection {
                 programme: Some(Programme::new(inode)),
                 extra_prog_page: None,
-            }
+            },
+            Some(val) => IplayerSelection {
+                programme: None,
+                extra_prog_page: Some(val.attr("href").unwrap_or("")),
+            },
         }
     }
 }
@@ -201,7 +194,7 @@ mod tests {
         assert_eq!(prog.title, "The A to Z of TV Cooking");
         assert_eq!(prog.pid, "b04vjm8d");
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
-//        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
+        //        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
 //        let idoc = IplayerDocument { idoc: doc };
         let programmes = idoc.programmes();
         assert_eq!(programmes.len(), 17);
@@ -219,8 +212,5 @@ mod tests {
         let isel = IplayerSelection::new(inode);
         let ip = isel.extra_prog_page.unwrap();
         assert_eq!(ip, "");
-
-
-
     }
 }
