@@ -234,6 +234,13 @@ mod tests {
         let sels = idoc.selection_results();
         assert_eq!(sels.len(), 17);
         let prog1_page = sels[1].extra_prog_page.unwrap();
-        assert_eq!(prog1, "/iplayer/episodes/p05jv04g");
+        assert!(sels[1].programme.is_none());
+        assert_eq!(prog1_page, "/iplayer/episodes/p05jv04g");
+        let prog17_page = sels[16].extra_prog_page.unwrap();
+        assert_eq!(prog17_page, "/iplayer/episodes/b09l5mdv");
+        assert!(sels[16].programme.is_none());
+        let prog16_page = sels[15].extra_prog_page.unwrap();
+        assert_eq!(prog16_page, "/iplayer/episodes/b07x182s");
+        assert!(sels[15].programme.is_none());
     }
 }
