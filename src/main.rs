@@ -229,5 +229,11 @@ mod tests {
     }
 
     #[test]
-    fn test_iplayer_programme() {}
+    fn test_iplayer_selections() {
+        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html"))};
+        let sels = idoc.selection_results();
+        assert_eq!(sels.len(), 17);
+        let prog1_page = sels[1].extra_prog_page.unwrap();
+        assert_eq!(prog1, "/iplayer/episodes/p05jv04g");
+    }
 }
