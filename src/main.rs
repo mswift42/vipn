@@ -21,6 +21,15 @@ impl IplayerDocument {
             })
             .collect()
     }
+
+    fn selection_results(&self) -> Vec<IplayerSelection> {
+        self.idoc.find(Class("list-item-inner"))
+            .map(|node| {
+                let inode = IplayerNode { node };
+                IplayerSelection::new(inode)
+            })
+            .collect()
+    }
 }
 
 pub struct ProgrammeDB<'a> {
@@ -213,10 +222,12 @@ mod tests {
         let isel = IplayerSelection::new(inode);
         let ip = isel.programme.unwrap();
         assert_eq!(ip.title, "The A to Z of TV Cooking");
-        // let isel = IplayerSelection::new(in2);
         let n2 = &idoc.idoc.find(Class("list-item-inner")).nth(1).unwrap();
         let in2 = IplayerNode { node: *n2 };
         let isel = IplayerSelection::new(in2);
         assert_eq!(isel.extra_prog_page.unwrap(), "/iplayer/episodes/p05jv04g");
     }
+
+    #[test]
+    fn test_iplayer_programme() {}
 }
