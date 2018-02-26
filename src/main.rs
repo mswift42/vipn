@@ -203,30 +203,12 @@ mod tests {
         assert_eq!(prog.title, "The A to Z of TV Cooking");
         assert_eq!(prog.pid, "b04vjm8d");
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
-        //        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
-//        let idoc = IplayerDocument { idoc: doc };
         let programmes = idoc.programmes();
         assert_eq!(programmes.len(), 17);
         assert_eq!(programmes[0].title, "The A to Z of TV Cooking");
         assert_eq!(programmes[1].title, "Fanny Cradock Cooks for Christmas");
     }
 
-    #[rustfmt_skip]
-    #[test]
-    fn test_iplayer_selection() {
-        let doc = select::document::Document::from(include_str!("../testhtml/food1.html"));
-        let idoc = IplayerDocument { idoc: doc };
-        let dn = &idoc.idoc.find(Class("list-item-inner")).next().unwrap();
-        let inode = IplayerNode { node: *dn };
-        assert_eq!(inode.find_title(), "The A to Z of TV Cooking");
-        let isel = IplayerSelection::new(inode);
-        let ip = isel.programme.unwrap();
-        assert_eq!(ip.title, "The A to Z of TV Cooking");
-        let n2 = &idoc.idoc.find(Class("list-item-inner")).nth(1).unwrap();
-        let in2 = IplayerNode { node: *n2 };
-        let isel = IplayerSelection::new(in2);
-        assert_eq!(isel.extra_prog_page.unwrap(), "/iplayer/episodes/p05jv04g");
-    }
 
     #[test]
     fn test_iplayer_selections() {
