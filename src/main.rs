@@ -56,6 +56,15 @@ pub struct Category<'a> {
     programmes: Vec<&'a Programme<'a>>,
 }
 
+impl<'a> Category<'a> {
+    pub fn new(name: String, programmes: Vec<&'a Programme<'a>>) -> Category<'a> {
+        return Category {
+            name,
+            programmes,
+        }
+    }
+}
+
 
 // type IplayerNode<'a> = select::node::Node<'a>;
 pub struct IplayerNode<'a> {
