@@ -51,6 +51,13 @@ struct MainCategoryDocument<'a> {
     idocs: Vec<&'a IplayerDocument>
 }
 
+impl<'a> MainCategoryDocument<'a> {
+    fn programmes(&self) -> Vec<Programme> {
+        let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
+        selection_results.iter().filter_map(|ref selres| selres.programme).collect()
+    }
+}
+
 pub struct Category<'a> {
     name: String,
     programmes: Vec<&'a Programme<'a>>,
@@ -61,7 +68,7 @@ impl<'a> Category<'a> {
         return Category {
             name,
             programmes,
-        }
+        };
     }
 }
 
@@ -221,7 +228,7 @@ mod tests {
 
     #[test]
     fn test_iplayer_selections() {
-        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html"))};
+        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
         let sels = idoc.selection_results();
         assert_eq!(sels.len(), 17);
         let prog1_page = sels[1].extra_prog_page.unwrap();
