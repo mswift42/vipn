@@ -54,7 +54,13 @@ struct MainCategoryDocument<'a> {
 impl<'a> MainCategoryDocument<'a> {
     fn programmes(&self) -> Vec<Programme> {
         let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
-        selection_results.iter().filter_map(|ref selres| selres.programme).collect()
+        let mut progs: Vec<Programme> = vec![];
+        for selres in selection_results {
+           if !selres.programme.is_none() {
+               progs.push(selres.programme.unwrap());
+           }
+        }
+        progs
     }
 }
 
