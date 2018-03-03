@@ -247,4 +247,11 @@ mod tests {
         assert_eq!(prog16_page, "/iplayer/episodes/b07x182s");
         assert!(sels[15].programme.is_none());
     }
+    #[test]
+    fn test_programmes() {
+        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html"))};
+        let mcd = MainCategoryDocument { idocs: vec![&idoc]};
+        let progs = mcd.programmes();
+        assert_eq!(progs[0].title, "The A to Z of TV Cooking");
+    }
 }
