@@ -253,5 +253,6 @@ mod tests {
         let mcd = MainCategoryDocument { idocs: vec![&idoc]};
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
+        assert_eq!(progs.len(), 4);
     }
 }
