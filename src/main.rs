@@ -246,6 +246,12 @@ mod tests {
         assert_eq!(programmes.len(), 17);
         assert_eq!(programmes[0].title, "The A to Z of TV Cooking");
         assert_eq!(programmes[1].title, "Fanny Cradock Cooks for Christmas");
+        let pages = idoc.next_pages();
+        let doc = select::document::Document::from(include_str!("../testhtml/films1.html"));
+        let idoc = IplayerDocument { idoc: doc };
+        let pages = idoc.next_pages();
+        assert_eq!(pages.len(), 1);
+        assert_eq!(pages[0], "/iplayer/categories/films/all?sort=atoz&page=2")
     }
 
 
