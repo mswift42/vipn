@@ -266,5 +266,10 @@ mod tests {
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
+        let pages = mcd.extra_program_pages();
+        assert_eq!(pages[0], "/iplayer/episodes/p05jv04g");
+        assert_eq!(pages.len(), 13);
+        assert_eq!(pages[1], "/iplayer/episodes/b03mzc66");
+        assert_eq!(pages[2], "/iplayer/episodes/b08f17c0");
     }
 }
