@@ -12,7 +12,7 @@ pub struct IplayerDocument {
 }
 
 impl IplayerDocument {
-    pub fn programmes(&self) -> Vec<Programme> {
+    fn programmes(&self) -> Vec<Programme> {
         self.idoc.find(Class("list-item-inner"))
             .map(|node| {
                 let inode = IplayerNode { node };
@@ -31,6 +31,11 @@ impl IplayerDocument {
             .collect()
     }
 
+    fn next_pages(&self) -> Vec<&str> {
+        self.idoc.find(Class("page").descendant(Name("a"))).map(
+            |node| node.attr("href").unwrap_or("")
+        ).collect()
+    }
 }
 
 pub struct ProgrammeDB<'a> {
@@ -57,9 +62,9 @@ impl<'a> MainCategoryDocument<'a> {
         let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
         let mut progs: Vec<Programme> = vec![];
         for selres in selection_results {
-           if let Some(prog) = selres.programme {
-               progs.push(prog);
-           }
+            if let Some(prog) = selres.programme {
+                progs.push(prog);
+            }
         }
         progs
     }
@@ -259,10 +264,11 @@ mod tests {
         assert_eq!(prog16_page, "/iplayer/episodes/b07x182s");
         assert!(sels[15].programme.is_none());
     }
+
     #[test]
     fn test_programmes() {
-        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html"))};
-        let mcd = MainCategoryDocument { idocs: vec![&idoc]};
+        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
+        let mcd = MainCategoryDocument { idocs: vec![&idoc] };
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
