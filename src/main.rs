@@ -30,6 +30,7 @@ impl IplayerDocument {
             })
             .collect()
     }
+
 }
 
 pub struct ProgrammeDB<'a> {
@@ -61,6 +62,17 @@ impl<'a> MainCategoryDocument<'a> {
            }
         }
         progs
+    }
+
+    fn extra_program_pages(&self) -> Vec<&str> {
+        let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
+        let mut pages: Vec<&str> = vec![];
+        for selres in selection_results {
+            if !selres.extra_prog_page.is_none() {
+                pages.push(selres.extra_prog_page.unwrap());
+            }
+        }
+        pages
     }
 }
 
