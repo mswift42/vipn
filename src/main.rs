@@ -57,8 +57,8 @@ impl<'a> MainCategoryDocument<'a> {
         let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
         let mut progs: Vec<Programme> = vec![];
         for selres in selection_results {
-           if !selres.programme.is_none() {
-               progs.push(selres.programme.unwrap());
+           if let Some(prog) = selres.programme {
+               progs.push(prog);
            }
         }
         progs
@@ -68,8 +68,8 @@ impl<'a> MainCategoryDocument<'a> {
         let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
         let mut pages: Vec<&str> = vec![];
         for selres in selection_results {
-            if !selres.extra_prog_page.is_none() {
-                pages.push(selres.extra_prog_page.unwrap());
+            if let Some(page) = selres.extra_prog_page {
+                pages.push(page);
             }
         }
         pages
