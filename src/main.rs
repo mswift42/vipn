@@ -12,16 +12,6 @@ pub struct IplayerDocument {
 }
 
 impl IplayerDocument {
-    fn programmes(&self) -> Vec<Programme> {
-        self.idoc.find(Class("list-item-inner"))
-            .map(|node| {
-                let inode = IplayerNode { node };
-                let prog = Programme::new(inode);
-                prog
-            })
-            .collect()
-    }
-
     fn selection_results(&self) -> Vec<IplayerSelection> {
         self.idoc.find(Class("list-item-inner"))
             .map(|node| {
@@ -44,7 +34,7 @@ pub struct ProgrammeDB<'a> {
 }
 
 impl<'a> ProgrammeDB<'a> {
-    pub fn new(cats: Vec<Category<'a>>) -> ProgrammeDB {
+    pub fn new(cats: Vec<Category<'a>>) -> ProgrammeDB<'a> {
         ProgrammeDB {
             categories: cats,
             saved: Utc::now(),
@@ -83,11 +73,11 @@ impl<'a> MainCategoryDocument<'a> {
 
 pub struct Category<'a> {
     name: String,
-    programmes: Vec<&'a Programme<'a>>,
+    programmes: Vec<Programme<'a>>,
 }
 
 impl<'a> Category<'a> {
-    pub fn new(name: String, programmes: Vec<&'a Programme<'a>>) -> Category<'a> {
+    pub fn new(name: String, programmes: Vec<Programme<'a>>) -> Category<'a> {
         return Category {
             name,
             programmes,
@@ -242,16 +232,6 @@ mod tests {
         assert_eq!(prog.title, "The A to Z of TV Cooking");
         assert_eq!(prog.pid, "b04vjm8d");
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
-        let programmes = idoc.programmes();
-        assert_eq!(programmes.len(), 17);
-        assert_eq!(programmes[0].title, "The A to Z of TV Cooking");
-        assert_eq!(programmes[1].title, "Fanny Cradock Cooks for Christmas");
-        let pages = idoc.next_pages();
-        let doc = select::document::Document::from(include_str!("../testhtml/films1.html"));
-        let idoc = IplayerDocument { idoc: doc };
-        let pages = idoc.next_pages();
-        assert_eq!(pages.len(), 1);
-        assert_eq!(pages[0], "/iplayer/categories/films/all?sort=atoz&page=2")
     }
 
 
