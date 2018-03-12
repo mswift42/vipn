@@ -56,6 +56,10 @@ impl<'a> MainCategoryDocument<'a> {
         }
         res
     }
+    fn selection_results(&self) -> Vec<IplayerSelection> {
+        let all_docs = self.all_docs();
+        all_docs.iter().flat_map(|idoc| idoc.selection_results()).collect()
+    }
     fn programmes(&self) -> Vec<Programme> {
         let all_docs = self.all_docs();
         let selection_results: Vec<IplayerSelection> = all_docs.iter().flat_map(|idoc| idoc.selection_results()).collect();
