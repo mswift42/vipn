@@ -61,8 +61,7 @@ impl<'a> MainCategoryDocument<'a> {
         all_docs.iter().flat_map(|idoc| idoc.selection_results()).collect()
     }
     fn programmes(&self) -> Vec<Programme> {
-        let all_docs = self.all_docs();
-        let selection_results: Vec<IplayerSelection> = all_docs.iter().flat_map(|idoc| idoc.selection_results()).collect();
+        let selection_results = self.selection_results();
         let mut progs: Vec<Programme> = vec![];
         for selres in selection_results {
             if let Some(prog) = selres.programme {
@@ -73,8 +72,7 @@ impl<'a> MainCategoryDocument<'a> {
     }
 
     fn extra_program_pages(&self) -> Vec<&str> {
-        let all_docs = self.all_docs();
-        let selection_results: Vec<IplayerSelection> = all_docs.iter().flat_map(|idoc| idoc.selection_results()).collect();
+        let selection_results = self.selection_results();
         let mut pages: Vec<&str> = vec![];
         for selres in selection_results {
             if let Some(page) = selres.extra_prog_page {
