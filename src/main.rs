@@ -44,6 +44,7 @@ impl<'a> ProgrammeDB<'a> {
 
 
 struct MainCategoryDocument<'a> {
+    maindoc: &'a IplayerDocument,
     idocs: Vec<&'a IplayerDocument>
 }
 
@@ -254,7 +255,7 @@ mod tests {
     #[test]
     fn test_programmes() {
         let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
-        let mcd = MainCategoryDocument { idocs: vec![&idoc] };
+        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![]};
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
