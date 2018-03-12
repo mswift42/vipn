@@ -49,6 +49,13 @@ struct MainCategoryDocument<'a> {
 }
 
 impl<'a> MainCategoryDocument<'a> {
+    fn all_docs(&self) -> Vec<&'a IplayerDocument> {
+        let mut res: Vec<&'a IplayerDocument> = vec![self.maindoc];
+        for i in self.idocs.iter() {
+            res.push(i);
+        }
+        res
+    }
     fn programmes(&self) -> Vec<Programme> {
         let selection_results: Vec<IplayerSelection> = self.idocs.iter().flat_map(|idoc| idoc.selection_results()).collect();
         let mut progs: Vec<Programme> = vec![];
