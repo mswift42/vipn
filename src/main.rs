@@ -81,6 +81,10 @@ impl<'a> MainCategoryDocument<'a> {
         }
         pages
     }
+
+    fn next_pages(&self) -> Vec<&str> {
+        self.maindoc.next_pages()
+    }
 }
 
 pub struct Category<'a> {
