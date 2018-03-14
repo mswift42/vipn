@@ -280,4 +280,13 @@ mod tests {
         assert_eq!(pages[1], "/iplayer/episodes/b03mzc66");
         assert_eq!(pages[2], "/iplayer/episodes/b08f17c0");
     }
+
+    #[test]
+    fn test_main_category_document() {
+        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/films1.html"))};
+        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![]};
+        let np = mcd.next_pages();
+        assert_eq!(np.len(), 1);
+        assert_eq!(np[0], "films2.html");
+    }
 }
