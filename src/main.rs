@@ -6,6 +6,7 @@ extern crate serde_json;
 
 use select::predicate::{Predicate, Class, Name};
 use chrono::prelude::*;
+use std::thread;
 
 pub struct IplayerDocument {
     idoc: select::document::Document
@@ -25,6 +26,10 @@ impl IplayerDocument {
         self.idoc.find(Class("page").descendant(Name("a"))).map(
             |node| node.attr("href").unwrap_or("")
         ).collect()
+    }
+
+    fn from_url(url: &str) -> Option<IplayerDocument> {
+
     }
 }
 
@@ -82,8 +87,13 @@ impl<'a> MainCategoryDocument<'a> {
         pages
     }
 
-    fn next_pages(&self) -> Vec<&str> {
-        self.maindoc.next_pages()
+    fn next_pages(&self) -> {
+        let urls = self.maindoc.next_pages()
+        for i in urls {
+            thread::spawn(|| {
+
+            })
+        }
     }
 }
 
