@@ -3,6 +3,7 @@ extern crate select;
 extern crate chrono;
 extern crate serde;
 extern crate serde_json;
+extern crate reqwest;
 
 use select::predicate::{Predicate, Class, Name};
 use chrono::prelude::*;
@@ -28,8 +29,14 @@ impl IplayerDocument {
         ).collect()
     }
 
-    fn from_url(url: &str) -> Option<IplayerDocument> {
+//    fn from_url(url: &str) -> Option<IplayerDocument> {
+//
+//    }
 
+    fn from_url(url: &str) -> IplayerDocument {
+        match resp = reqwest::get(url);
+        Err(e) => panic!(e),
+        Ok(body) => select::document::Document::from_read(resp)
     }
 }
 
@@ -50,7 +57,7 @@ impl<'a> ProgrammeDB<'a> {
 
 struct MainCategoryDocument<'a> {
     maindoc: &'a IplayerDocument,
-    idocs: Vec<&'a IplayerDocument>
+    idocs: Vec<&'a IplayerDocument>,
 }
 
 impl<'a> MainCategoryDocument<'a> {
@@ -87,13 +94,9 @@ impl<'a> MainCategoryDocument<'a> {
         pages
     }
 
-    fn next_pages(&self) -> {
-        let urls = self.maindoc.next_pages()
-        for i in urls {
-            thread::spawn(|| {
-
-            })
-        }
+    fn next_pages(&self) -> Vec<&str> {
+        let urls = self.maindoc.next_pages();
+        urls
     }
 }
 
@@ -280,7 +283,7 @@ mod tests {
     #[test]
     fn test_programmes() {
         let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![]};
+        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![] };
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
@@ -293,8 +296,8 @@ mod tests {
 
     #[test]
     fn test_main_category_document() {
-        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/films1.html"))};
-        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![]};
+        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/films1.html")) };
+        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![] };
         let np = mcd.next_pages();
         assert_eq!(np.len(), 1);
         assert_eq!(np[0], "films2.html");
