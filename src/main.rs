@@ -34,9 +34,17 @@ impl IplayerDocument {
 //    }
 
     fn from_url(url: &str) -> IplayerDocument {
-        match resp = reqwest::get(url);
-        Err(e) => panic!(e),
-        Ok(body) => select::document::Document::from_read(resp)
+        let resp = reqwest::get(url);
+        match resp {
+            Err(e) => panic!(e),
+            Ok(body) => {
+                let doc = select::document::Document::from_read(body);
+                match doc {
+                    Err(e) => panic!(e),
+                    Ok(iplayerdoc) => IplayerDocument { idoc: iplayerdoc}
+                }
+            }
+        }
     }
 }
 
