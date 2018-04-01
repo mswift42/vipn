@@ -71,7 +71,7 @@ struct MainCategoryDocument<'a> {
 impl<'a> MainCategoryDocument<'a> {
     fn all_docs(&self) -> Vec<&'a IplayerDocument> {
         let mut res: Vec<&'a IplayerDocument> = vec![self.maindoc];
-        for i in self.idocs.iter() {
+        for i in &self.idocs {
             res.push(i);
         }
         res
