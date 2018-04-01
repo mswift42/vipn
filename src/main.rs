@@ -103,8 +103,7 @@ impl<'a> MainCategoryDocument<'a> {
     }
 
     fn next_pages(&self) -> Vec<&str> {
-        let urls = self.maindoc.next_pages();
-        urls
+        self.maindoc.next_pages()
     }
 }
 
