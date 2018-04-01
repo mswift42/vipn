@@ -114,10 +114,10 @@ pub struct Category<'a> {
 
 impl<'a> Category<'a> {
     pub fn new(name: String, programmes: Vec<Programme<'a>>) -> Category<'a> {
-        return Category {
+        Category {
             name,
             programmes,
-        };
+        }
     }
 }
 
