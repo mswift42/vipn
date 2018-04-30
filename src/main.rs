@@ -65,13 +65,13 @@ impl<'a> ProgrammeDB<'a> {
 
 struct MainCategoryDocument<'a> {
     maindoc: &'a IplayerDocument,
-    idocs: Vec<&'a IplayerDocument>,
+    nextdocs: Vec<&'a IplayerDocument>,
 }
 
 impl<'a> MainCategoryDocument<'a> {
     fn all_docs(&self) -> Vec<&'a IplayerDocument> {
         let mut res: Vec<&'a IplayerDocument> = vec![self.maindoc];
-        for i in &self.idocs {
+        for i in &self.nextdocs {
             res.push(i);
         }
         res
@@ -290,7 +290,7 @@ mod tests {
     #[test]
     fn test_programmes() {
         let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![] };
+        let mcd = MainCategoryDocument { maindoc: &idoc, nextdocs: vec![] };
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
@@ -304,7 +304,7 @@ mod tests {
     #[test]
     fn test_main_category_document() {
         let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/films1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, idocs: vec![] };
+        let mcd = MainCategoryDocument { maindoc: &idoc, nextdocs: vec![] };
         let np = mcd.next_pages();
         assert_eq!(np.len(), 1);
         assert_eq!(np[0], "films2.html");
