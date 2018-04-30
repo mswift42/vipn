@@ -66,6 +66,7 @@ impl<'a> ProgrammeDB<'a> {
 struct MainCategoryDocument<'a> {
     maindoc: &'a IplayerDocument,
     nextdocs: Vec<&'a IplayerDocument>,
+    selectionresults: Vec<IplayerSelection>
 }
 
 impl<'a> MainCategoryDocument<'a> {
