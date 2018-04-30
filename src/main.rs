@@ -13,6 +13,7 @@ pub struct IplayerDocument {
     idoc: select::document::Document
 }
 
+
 impl IplayerDocument {
     fn selection_results(&self) -> Vec<IplayerSelection> {
         self.idoc.find(Class("list-item-inner"))
@@ -48,6 +49,10 @@ impl IplayerDocument {
     }
 }
 
+pub trait DocumentLoader {
+    fn load_document(&self) -> Option<IplayerDocument>;
+}
+
 pub struct ProgrammeDB<'a> {
     pub categories: Vec<Category<'a>>,
     pub saved: DateTime<Utc>,
@@ -68,6 +73,7 @@ struct MainCategoryDocument<'a> {
     nextdocs: Vec<&'a IplayerDocument>,
     selectionresults: Vec<&'a IplayerSelection<'a>>
 }
+
 
 impl<'a> MainCategoryDocument<'a> {
     fn all_docs(&self) -> Vec<&'a IplayerDocument> {
