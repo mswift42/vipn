@@ -1,22 +1,22 @@
 #![feature(custom_attribute)]
-extern crate select;
 extern crate chrono;
+extern crate reqwest;
+extern crate select;
 extern crate serde;
 extern crate serde_json;
-extern crate reqwest;
 
-use select::predicate::{Predicate, Class, Name};
 use chrono::prelude::*;
+use select::predicate::{Class, Name, Predicate};
 use std::thread;
 
 pub struct IplayerDocument {
-    idoc: select::document::Document
+    idoc: select::document::Document,
 }
-
 
 impl IplayerDocument {
     fn selection_results(&self) -> Vec<IplayerSelection> {
-        self.idoc.find(Class("list-item-inner"))
+        self.idoc
+            .find(Class("list-item-inner"))
             .map(|node| {
                 let inode = IplayerNode { node };
                 IplayerSelection::new(inode)
@@ -25,9 +25,10 @@ impl IplayerDocument {
     }
 
     fn next_pages(&self) -> Vec<&str> {
-        self.idoc.find(Class("page").descendant(Name("a"))).map(
-            |node| node.attr("href").unwrap_or("")
-        ).collect()
+        self.idoc
+            .find(Class("page").descendant(Name("a")))
+            .map(|node| node.attr("href").unwrap_or(""))
+            .collect()
     }
 
     fn from_url(url: &str) -> IplayerDocument {
@@ -38,11 +39,15 @@ impl IplayerDocument {
                 let doc = select::document::Document::from_read(body);
                 match doc {
                     Err(e) => panic!(e),
-                    Ok(iplayerdoc) => IplayerDocument { idoc: iplayerdoc }
+                    Ok(iplayerdoc) => IplayerDocument { idoc: iplayerdoc },
                 }
             }
         }
     }
+}
+
+pub struct ProgramPage {
+    doc: IplayerDocument,
 }
 
 pub trait DocumentLoader {
@@ -63,13 +68,11 @@ impl<'a> ProgrammeDB<'a> {
     }
 }
 
-
 struct MainCategoryDocument<'a> {
     maindoc: &'a IplayerDocument,
     nextdocs: Vec<&'a IplayerDocument>,
     selectionresults: Vec<&'a IplayerSelection<'a>>,
 }
-
 
 impl<'a> MainCategoryDocument<'a> {
     fn all_docs(&self) -> Vec<&'a IplayerDocument> {
@@ -81,7 +84,10 @@ impl<'a> MainCategoryDocument<'a> {
     }
     fn selection_results(&self) -> Vec<IplayerSelection> {
         let all_docs = self.all_docs();
-        all_docs.iter().flat_map(|idoc| idoc.selection_results()).collect()
+        all_docs
+            .iter()
+            .flat_map(|idoc| idoc.selection_results())
+            .collect()
     }
     fn programmes(&self) -> Vec<Programme> {
         let selection_results = self.selection_results();
@@ -117,30 +123,27 @@ pub struct Category<'a> {
 
 impl<'a> Category<'a> {
     pub fn new(name: String, programmes: Vec<Programme<'a>>) -> Category<'a> {
-        Category {
-            name,
-            programmes,
-        }
+        Category { name, programmes }
     }
 }
 
-
-// type IplayerNode<'a> = select::node::Node<'a>;
+// type IplayerNode<'a> = select::ode::Node<'a>;
 pub struct IplayerNode<'a> {
-    pub node: select::node::Node<'a>
+    pub node: select::node::Node<'a>,
 }
 
 impl<'a> IplayerNode<'a> {
     fn find_title(&self) -> String {
-        self.node.find(Class("secondary").descendant(Class("title")))
+        self.node
+            .find(Class("secondary").descendant(Class("title")))
             .next()
             .unwrap()
             .text()
     }
 
     fn find_subtitle(&self) -> Option<String> {
-        let sub = self.node.find(Class("secondary")
-            .descendant(Class("subtitle")))
+        let sub = self.node
+            .find(Class("secondary").descendant(Class("subtitle")))
             .next();
         match sub {
             None => None,
@@ -149,7 +152,8 @@ impl<'a> IplayerNode<'a> {
     }
 
     fn find_url(&self) -> String {
-        let path = self.node.find(Name("a"))
+        let path = self.node
+            .find(Name("a"))
             .next()
             .unwrap()
             .attr("href")
@@ -162,9 +166,8 @@ impl<'a> IplayerNode<'a> {
     }
 
     fn find_thumbnail(&self) -> &'a str {
-        self.node.find(Class("rs-image")
-            .descendant(Name("picture")
-                .descendant(Name("source"))))
+        self.node
+            .find(Class("rs-image").descendant(Name("picture").descendant(Name("source"))))
             .next()
             .unwrap()
             .attr("srcset")
@@ -173,7 +176,8 @@ impl<'a> IplayerNode<'a> {
 
     fn find_pid(&self) -> &'a str {
         match self.node.parent().unwrap().attr("data-ip-id") {
-            None => self.node.find(Class("list-item-inner").descendant(Name("a")))
+            None => self.node
+                .find(Class("list-item-inner").descendant(Name("a")))
                 .next()
                 .unwrap()
                 .attr("data-episode-id")
@@ -183,10 +187,7 @@ impl<'a> IplayerNode<'a> {
     }
 
     fn find_synopsis(&self) -> String {
-        self.node.find(Class("synopsis"))
-            .next()
-            .unwrap()
-            .text()
+        self.node.find(Class("synopsis")).next().unwrap().text()
     }
 }
 
@@ -197,8 +198,7 @@ struct IplayerSelection<'a> {
 
 impl<'a> IplayerSelection<'a> {
     fn new(inode: IplayerNode) -> IplayerSelection {
-        match inode.node.find(Class("view-more-container"))
-            .next() {
+        match inode.node.find(Class("view-more-container")).next() {
             None => IplayerSelection {
                 programme: Some(Programme::new(inode)),
                 extra_prog_page: None,
@@ -210,7 +210,6 @@ impl<'a> IplayerSelection<'a> {
         }
     }
 }
-
 
 #[derive(Debug)]
 pub struct Programme<'a> {
@@ -244,7 +243,6 @@ impl<'a> Programme<'a> {
     }
 }
 
-
 fn main() {
     println!("Hello, world!");
 }
@@ -273,10 +271,11 @@ mod tests {
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
     }
 
-
     #[test]
     fn test_iplayer_selections() {
-        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
+        let idoc = IplayerDocument {
+            idoc: select::document::Document::from(include_str!("../testhtml/food1.html")),
+        };
         let sels = idoc.selection_results();
         assert_eq!(sels.len(), 17);
         let prog1_page = sels[1].extra_prog_page.unwrap();
@@ -292,8 +291,14 @@ mod tests {
 
     #[test]
     fn test_programmes() {
-        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, selectionresults: vec![], nextdocs: vec![] };
+        let idoc = IplayerDocument {
+            idoc: select::document::Document::from(include_str!("../testhtml/food1.html")),
+        };
+        let mcd = MainCategoryDocument {
+            maindoc: &idoc,
+            selectionresults: vec![],
+            nextdocs: vec![],
+        };
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
@@ -306,8 +311,14 @@ mod tests {
 
     #[test]
     fn test_main_category_document() {
-        let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/films1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, selectionresults: vec![], nextdocs: vec![] };
+        let idoc = IplayerDocument {
+            idoc: select::document::Document::from(include_str!("../testhtml/films1.html")),
+        };
+        let mcd = MainCategoryDocument {
+            maindoc: &idoc,
+            selectionresults: vec![],
+            nextdocs: vec![],
+        };
         let np = mcd.next_pages();
         assert_eq!(np.len(), 1);
         assert_eq!(np[0], "films2.html");
