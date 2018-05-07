@@ -30,10 +30,6 @@ impl IplayerDocument {
         ).collect()
     }
 
-//    fn from_url(url: &str) -> Option<IplayerDocument> {
-//
-//    }
-
     fn from_url(url: &str) -> IplayerDocument {
         let resp = reqwest::get(url);
         match resp {
@@ -42,7 +38,7 @@ impl IplayerDocument {
                 let doc = select::document::Document::from_read(body);
                 match doc {
                     Err(e) => panic!(e),
-                    Ok(iplayerdoc) => IplayerDocument { idoc: iplayerdoc}
+                    Ok(iplayerdoc) => IplayerDocument { idoc: iplayerdoc }
                 }
             }
         }
@@ -71,7 +67,7 @@ impl<'a> ProgrammeDB<'a> {
 struct MainCategoryDocument<'a> {
     maindoc: &'a IplayerDocument,
     nextdocs: Vec<&'a IplayerDocument>,
-    selectionresults: Vec<&'a IplayerSelection<'a>>
+    selectionresults: Vec<&'a IplayerSelection<'a>>,
 }
 
 
@@ -297,7 +293,7 @@ mod tests {
     #[test]
     fn test_programmes() {
         let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/food1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, nextdocs: vec![] };
+        let mcd = MainCategoryDocument { maindoc: &idoc, selectionresults: vec![], nextdocs: vec![] };
         let progs = mcd.programmes();
         assert_eq!(progs[0].title, "The A to Z of TV Cooking");
         assert_eq!(progs.len(), 4);
@@ -311,7 +307,7 @@ mod tests {
     #[test]
     fn test_main_category_document() {
         let idoc = IplayerDocument { idoc: select::document::Document::from(include_str!("../testhtml/films1.html")) };
-        let mcd = MainCategoryDocument { maindoc: &idoc, nextdocs: vec![] };
+        let mcd = MainCategoryDocument { maindoc: &idoc, selectionresults: vec![], nextdocs: vec![] };
         let np = mcd.next_pages();
         assert_eq!(np.len(), 1);
         assert_eq!(np[0], "films2.html");
