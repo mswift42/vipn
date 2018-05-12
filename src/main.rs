@@ -50,6 +50,16 @@ pub struct ProgramPage {
     doc: IplayerDocument,
 }
 
+impl<'a> ProgramPage {
+    pub fn new(&self) -> Vec<&'a Programme> {
+        let title = self.doc.idoc.find(Class("hero-header__title"))
+            .next().unwrap();
+        let subtitle = self.doc.idoc.find(Class("content-item__title")).next().unwrap();
+        let synopsis = self.doc.idoc.find(Class("content-item__info__secondary").
+            descendant(Class("content-item__description"))).next().unwrap();
+    }
+}
+
 pub trait DocumentLoader {
     fn load_document(&self) -> Option<IplayerDocument>;
 }
