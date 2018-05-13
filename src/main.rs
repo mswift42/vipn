@@ -52,10 +52,11 @@ pub struct ProgramPage {
 
 impl<'a> ProgramPage {
     pub fn new(&self) -> Vec<&'a Programme> {
-        let title = self.doc.idoc.find(Class("hero-header__title"))
+        let node = self.doc.idoc.find(Class("content-item")).next().unwrap();
+        let title = node.find(Class("hero-header__title"))
             .next().unwrap();
-        let subtitle = self.doc.idoc.find(Class("content-item__title")).next().unwrap();
-        let synopsis = self.doc.idoc.find(Class("content-item__info__secondary").
+        let subtitle = node.find(Class("content-item__title")).next().unwrap();
+        let synopsis = node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap();
     }
 }
@@ -251,6 +252,19 @@ impl<'a> Programme<'a> {
             index,
         }
     }
+    fn new_from_program_page(inode: IplayerNode, title: String) -> Programme {
+        let subtitle = inode.node.find(Class("content-item__title")).next().unwrap().text();
+        let synopsis = inode.node.find(Class("content-item__info__secondary").
+            descendant(Class("content-item__description"))).next().unwrap();
+        let url = inode.node.find(Name("a")).next().unwrap().attr("href").unwrap_or("");
+        let thumbnail = inode.node.Find(Class("rs-image").descendant(Class("picture")
+            .descendant(Class("source")))).next().unwrap().attr("srcset").unwrap_or("");
+            Programme {
+                title: title,
+                subtitle: subtitle,
+                synopsis: synopsis,
+
+            }
 }
 
 fn main() {
