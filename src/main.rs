@@ -58,6 +58,10 @@ impl<'a> ProgramPage {
         let subtitle = node.find(Class("content-item__title")).next().unwrap();
         let synopsis = node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap();
+        let set = self.doc.idoc.find(Name("source")).next().unwrap_or("")
+        .attr("srcset").unwrap_or("");
+        let split = set.split(" ");
+        let thumb = split[0];
     }
 }
 
@@ -253,7 +257,10 @@ impl<'a> Programme<'a> {
         }
     }
     fn new_from_program_page(inode: IplayerNode, title: String) -> Programme {
-        let subtitle = inode.node.find(Class("content-item__title")).next().unwrap().text();
+        // let subtitle = match inode.node.find(Class("content-item__title")).next() {
+        //     None => None,
+        //     Some(text) => text.to_string();
+        // };
         let synopsis = inode.node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap();
         let url = inode.node.find(Name("a")).next().unwrap().attr("href").unwrap_or("");
@@ -266,6 +273,8 @@ impl<'a> Programme<'a> {
 
             }
 }
+}
+
 
 fn main() {
     println!("Hello, world!");
