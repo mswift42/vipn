@@ -260,16 +260,20 @@ impl<'a> Programme<'a> {
         // };
         let synopsis = inode.node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap().text();
-        let url = inode.node.find(Name("a")).next().unwrap().attr("href").unwrap_or("");
+        let url = inode.node.find(Name("a")).next().unwrap().
+            attr("href").unwrap_or("").to_string();
         let thumbnail = inode.node.Find(Class("rs-image").descendant(Class("picture")
             .descendant(Class("source")))).next().unwrap().attr("srcset").unwrap_or("");
-            Programme {
-                title: title,
-                subtitle: subtitle,
-                synopsis: synopsis,
-
-            }
-}
+        let index = 0;
+        Programme {
+            title: title,
+            subtitle: subtitle,
+            synopsis: synopsis,
+            thumbnail: thumbnail,
+            url: url,
+            index: index,
+        }
+    }
 }
 
 
