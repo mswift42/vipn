@@ -231,7 +231,6 @@ pub struct Programme<'a> {
     pub title: String,
     pub subtitle: Option<String>,
     pub synopsis: String,
-    pub pid: &'a str,
     pub thumbnail: &'a str,
     pub url: String,
     pub index: usize,
@@ -242,7 +241,6 @@ impl<'a> Programme<'a> {
         let title = inode.find_title();
         let subtitle = inode.find_subtitle();
         let synopsis = inode.find_synopsis();
-        let pid = inode.find_pid();
         let thumbnail = inode.find_thumbnail();
         let url = inode.find_url();
         let index = 0;
@@ -250,7 +248,6 @@ impl<'a> Programme<'a> {
             title,
             subtitle,
             synopsis,
-            pid,
             thumbnail,
             url,
             index,
@@ -262,7 +259,7 @@ impl<'a> Programme<'a> {
         //     Some(text) => text.to_string();
         // };
         let synopsis = inode.node.find(Class("content-item__info__secondary").
-            descendant(Class("content-item__description"))).next().unwrap();
+            descendant(Class("content-item__description"))).next().unwrap().text();
         let url = inode.node.find(Name("a")).next().unwrap().attr("href").unwrap_or("");
         let thumbnail = inode.node.Find(Class("rs-image").descendant(Class("picture")
             .descendant(Class("source")))).next().unwrap().attr("srcset").unwrap_or("");
