@@ -189,18 +189,6 @@ impl<'a> IplayerNode<'a> {
             .unwrap_or("")
     }
 
-    fn find_pid(&self) -> &'a str {
-        match self.node.parent().unwrap().attr("data-ip-id") {
-            None => self.node
-                .find(Class("list-item-inner").descendant(Name("a")))
-                .next()
-                .unwrap()
-                .attr("data-episode-id")
-                .unwrap_or(""),
-            Some(pid) => pid,
-        }
-    }
-
     fn find_synopsis(&self) -> String {
         self.node.find(Class("synopsis")).next().unwrap().text()
     }
