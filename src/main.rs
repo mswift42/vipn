@@ -53,15 +53,15 @@ pub struct ProgramPage {
 impl<'a> ProgramPage {
     pub fn new(&self) -> Vec<&'a Programme> {
         let node = self.doc.idoc.find(Class("content-item")).next().unwrap();
+        let inode = IplayerNode{node};
         let title = node.find(Class("hero-header__title"))
             .next().unwrap();
         let subtitle = node.find(Class("content-item__title")).next().unwrap();
         let synopsis = node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap();
-        let set = self.doc.idoc.find(Name("source")).next().unwrap_or("")
-        .attr("srcset").unwrap_or("");
-        let split = set.split(" ");
-        let thumb = split[0];
+        let thumbnail = inode.find_thumbnail();
+        let url = inode.find_url();
+        }
     }
 }
 
@@ -187,6 +187,9 @@ impl<'a> IplayerNode<'a> {
             .unwrap()
             .attr("srcset")
             .unwrap_or("")
+            .split_whitespace()
+            .next()
+            .unwrap()
     }
 
     fn find_pid(&self) -> &'a str {
@@ -262,7 +265,7 @@ impl<'a> Programme<'a> {
             descendant(Class("content-item__description"))).next().unwrap().text();
         let url = inode.node.find(Name("a")).next().unwrap().
             attr("href").unwrap_or("").to_string();
-        let thumbnail = inode.node.Find(Class("rs-image").descendant(Class("picture")
+        let thumbnail = inode.node.find(Class("rs-image").descendant(Class("picture")
             .descendant(Class("source")))).next().unwrap().attr("srcset").unwrap_or("");
         let index = 0;
         Programme {
