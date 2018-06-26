@@ -51,18 +51,18 @@ pub struct ProgramPage {
 }
 
 impl<'a> ProgramPage {
-    pub fn new(&self) -> Vec<&'a Programme> {
-        let node = self.doc.idoc.find(Class("content-item")).next().unwrap();
-        let title = node.find(Class("hero-header__title"))
-            .next().unwrap();
-        let subtitle = node.find(Class("content-item__title")).next().unwrap();
-        let synopsis = node.find(Class("content-item__info__secondary").
-            descendant(Class("content-item__description"))).next().unwrap();
-        let set = self.doc.idoc.find(Name("source")).next().unwrap_or("")
-        .attr("srcset").unwrap_or("");
-        let split = set.split(" ");
-        let thumb = split[0];
-    }
+    // pub fn new(&self) -> Vec<&'a Programme> {
+    //     let node = self.doc.idoc.find(Class("content-item")).next().unwrap();
+    //     let title = node.find(Class("hero-header__title"))
+    //         .next().unwrap();
+    //     let subtitle = node.find(Class("content-item__title")).next().unwrap();
+    //     let synopsis = node.find(Class("content-item__info__secondary").
+    //         descendant(Class("content-item__description"))).next().unwrap();
+    //     let set = self.doc.idoc.find(Name("source")).next().unwrap()
+    //     .attr("srcset").unwrap_or("");
+    //     let split = set.split_whitespace();
+    //     let thumb = split.next().unwrap();
+    // }
 }
 
 pub trait DocumentLoader {
@@ -258,11 +258,12 @@ impl<'a> Programme<'a> {
         //     None => None,
         //     Some(text) => text.to_string();
         // };
+        let subtitle = inode.find_subtitle();
         let synopsis = inode.node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap().text();
         let url = inode.node.find(Name("a")).next().unwrap().
             attr("href").unwrap_or("").to_string();
-        let thumbnail = inode.node.Find(Class("rs-image").descendant(Class("picture")
+        let thumbnail = inode.node.find(Class("rs-image").descendant(Class("picture")
             .descendant(Class("source")))).next().unwrap().attr("srcset").unwrap_or("");
         let index = 0;
         Programme {
