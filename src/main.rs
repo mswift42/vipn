@@ -285,10 +285,8 @@ mod tests {
         assert_eq!(inode.find_subtitle(), Some("Reversioned Series: 16. Letter P".to_string()));
         assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b04w5mf0/the-a-to-z-of-tv-cooking-reversioned-series-16-letter-p".to_string());
         assert_eq!(inode.find_thumbnail(), "https://ichef.bbci.co.uk/images/ic/336x189/p02dd1vv.jpg".to_string());
-        assert_eq!(inode.find_pid(), "b04vjm8d".to_string());
         let prog = Programme::new(inode);
         assert_eq!(prog.title, "The A to Z of TV Cooking");
-        assert_eq!(prog.pid, "b04vjm8d");
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
     }
 
