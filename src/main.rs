@@ -1,11 +1,9 @@
 #![feature(custom_attribute)]
-extern crate chrono;
 extern crate reqwest;
 extern crate select;
 extern crate serde;
 extern crate serde_json;
 
-use chrono::prelude::*;
 use select::predicate::{Class, Name, Predicate};
 use std::thread;
 
@@ -51,6 +49,18 @@ pub struct ProgramPage {
 }
 
 impl<'a> ProgramPage {
+    // pub fn new(&self) -> Vec<&'a Programme> {
+    //     let node = self.doc.idoc.find(Class("content-item")).next().unwrap();
+    //     let title = node.find(Class("hero-header__title"))
+    //         .next().unwrap();
+    //     let subtitle = node.find(Class("content-item__title")).next().unwrap();
+    //     let synopsis = node.find(Class("content-item__info__secondary").
+    //         descendant(Class("content-item__description"))).next().unwrap();
+    //     let set = self.doc.idoc.find(Name("source")).next().unwrap()
+    //     .attr("srcset").unwrap_or("");
+    //     let split = set.split_whitespace();
+    //     let thumb = split.next().unwrap();
+    // }
     pub fn new(&self) -> Vec<&'a Programme> {
         let node = self.doc.idoc.find(Class("content-item")).next().unwrap();
         let inode = IplayerNode{node};
@@ -71,14 +81,14 @@ pub trait DocumentLoader {
 
 pub struct ProgrammeDB<'a> {
     pub categories: Vec<Category<'a>>,
-    pub saved: DateTime<Utc>,
+    pub saved: std::time::SystemTime,
 }
 
 impl<'a> ProgrammeDB<'a> {
     pub fn new(cats: Vec<Category<'a>>) -> ProgrammeDB<'a> {
         ProgrammeDB {
             categories: cats,
-            saved: Utc::now(),
+            saved: std::time::SystemTime::now(),
         }
     }
 }
@@ -192,18 +202,6 @@ impl<'a> IplayerNode<'a> {
             .unwrap()
     }
 
-    fn find_pid(&self) -> &'a str {
-        match self.node.parent().unwrap().attr("data-ip-id") {
-            None => self.node
-                .find(Class("list-item-inner").descendant(Name("a")))
-                .next()
-                .unwrap()
-                .attr("data-episode-id")
-                .unwrap_or(""),
-            Some(pid) => pid,
-        }
-    }
-
     fn find_synopsis(&self) -> String {
         self.node.find(Class("synopsis")).next().unwrap().text()
     }
@@ -261,6 +259,7 @@ impl<'a> Programme<'a> {
         //     None => None,
         //     Some(text) => text.to_string();
         // };
+        let subtitle = inode.find_subtitle();
         let synopsis = inode.node.find(Class("content-item__info__secondary").
             descendant(Class("content-item__description"))).next().unwrap().text();
         let url = inode.node.find(Name("a")).next().unwrap().
@@ -301,10 +300,8 @@ mod tests {
         assert_eq!(inode.find_subtitle(), Some("Reversioned Series: 16. Letter P".to_string()));
         assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b04w5mf0/the-a-to-z-of-tv-cooking-reversioned-series-16-letter-p".to_string());
         assert_eq!(inode.find_thumbnail(), "https://ichef.bbci.co.uk/images/ic/336x189/p02dd1vv.jpg".to_string());
-        assert_eq!(inode.find_pid(), "b04vjm8d".to_string());
         let prog = Programme::new(inode);
         assert_eq!(prog.title, "The A to Z of TV Cooking");
-        assert_eq!(prog.pid, "b04vjm8d");
         assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
     }
 
