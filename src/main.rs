@@ -1,11 +1,9 @@
 #![feature(custom_attribute)]
-extern crate chrono;
 extern crate reqwest;
 extern crate select;
 extern crate serde;
 extern crate serde_json;
 
-use chrono::prelude::*;
 use select::predicate::{Class, Name, Predicate};
 use std::thread;
 
