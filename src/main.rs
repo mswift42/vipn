@@ -69,14 +69,14 @@ pub trait DocumentLoader {
 
 pub struct ProgrammeDB<'a> {
     pub categories: Vec<Category<'a>>,
-    pub saved: DateTime<Utc>,
+    pub saved: std::time::SystemTime,
 }
 
 impl<'a> ProgrammeDB<'a> {
     pub fn new(cats: Vec<Category<'a>>) -> ProgrammeDB<'a> {
         ProgrammeDB {
             categories: cats,
-            saved: Utc::now(),
+            saved: std::time::SystemTime::now(),
         }
     }
 }
