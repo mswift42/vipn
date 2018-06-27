@@ -13,6 +13,8 @@ pub struct IplayerDocument {
 
 type BeebURL = String;
 
+type TestHTMLURL = String;
+
 impl BeebURL {
     pub fn load_document(&self) -> IplayerDocument {
        let resp = reqwest::get(self);
@@ -26,6 +28,12 @@ impl BeebURL {
                 }
             }
         }
+    }
+}
+
+impl TestHTMLURL {
+    pub fn load_document(&self) -> IplayerDocument {
+       IplayerDocument {idoc: select::document::Document::from(self) }
     }
 }
 
