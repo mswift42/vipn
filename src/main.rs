@@ -11,6 +11,27 @@ pub struct IplayerDocument {
     idoc: select::document::Document,
 }
 
+type BeebURL = String;
+
+impl BeebURL {
+    pub fn load_document(&self) -> IplayerDocument {
+       let resp = reqwest::get(self);
+        match resp {
+           Err(e) => panic!(e),
+            Ok(body) => {
+                let doc = select::document::Document::from_read(body);
+                match doc {
+                    Err(e) => panic!(e),
+                    Ok(iplayerdoc) => IplayerDocument {idoc: iplayerdoc },
+                }
+            }
+        }
+    }
+}
+
+pub trait DocumentLoader {
+    fn load_document(&self) -> IplayerDocument;
+}
 impl IplayerDocument {
     fn selection_results(&self) -> Vec<IplayerSelection> {
         self.idoc
@@ -75,9 +96,6 @@ impl<'a> ProgramPage {
 //    }
 }
 
-pub trait DocumentLoader {
-    fn load_document(&self) -> Option<IplayerDocument>;
-}
 
 pub struct ProgrammeDB<'a> {
     pub categories: Vec<Category<'a>>,
