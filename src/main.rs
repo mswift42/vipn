@@ -12,11 +12,11 @@ pub struct IplayerDocument {
 }
 
 pub struct  BeebURL {
-    url: string,
+    url: String,
 }
 
 pub struct TestHTMLURL {
-    url: string,
+    url: String,
 }
 
 impl BeebURL {
@@ -44,7 +44,7 @@ impl TestHTMLURL {
 pub trait DocumentLoader {
     fn load_document(&self) -> IplayerDocument;
 }
-impl DocumentLoader {
+impl IplayerDocument {
     fn selection_results(&self) -> Vec<IplayerSelection> {
         self.idoc
             .find(Class("list-item-inner"))
