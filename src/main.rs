@@ -11,13 +11,17 @@ pub struct IplayerDocument {
     idoc: select::document::Document,
 }
 
-type BeebURL = String;
+pub struct  BeebURL {
+    url: string,
+}
 
-type TestHTMLURL = String;
+pub struct TestHTMLURL {
+    url: string,
+}
 
 impl BeebURL {
     pub fn load_document(&self) -> IplayerDocument {
-       let resp = reqwest::get(self);
+       let resp = reqwest::get(self.url);
         match resp {
            Err(e) => panic!(e),
             Ok(body) => {
@@ -33,14 +37,14 @@ impl BeebURL {
 
 impl TestHTMLURL {
     pub fn load_document(&self) -> IplayerDocument {
-       IplayerDocument {idoc: select::document::Document::from(self) }
+       IplayerDocument {idoc: select::document::Document::from(self.url) }
     }
 }
 
 pub trait DocumentLoader {
     fn load_document(&self) -> IplayerDocument;
 }
-impl IplayerDocument {
+impl DocumentLoader {
     fn selection_results(&self) -> Vec<IplayerSelection> {
         self.idoc
             .find(Class("list-item-inner"))
@@ -58,19 +62,6 @@ impl IplayerDocument {
             .collect()
     }
 
-    fn from_url(url: &str) -> IplayerDocument {
-        let resp = reqwest::get(url);
-        match resp {
-            Err(e) => panic!(e),
-            Ok(body) => {
-                let doc = select::document::Document::from_read(body);
-                match doc {
-                    Err(e) => panic!(e),
-                    Ok(iplayerdoc) => IplayerDocument { idoc: iplayerdoc },
-                }
-            }
-        }
-    }
 }
 
 pub struct ProgramPage {
