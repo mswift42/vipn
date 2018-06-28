@@ -6,22 +6,26 @@ extern crate serde_json;
 
 use select::predicate::{Class, Name, Predicate};
 use std::thread;
+use reqwest::Url;
+use reqwest::UrlError;
 
 pub struct IplayerDocument {
     idoc: select::document::Document,
 }
 
-pub struct  BeebURL {
-    url: String,
+pub struct  BeebURL<'a> {
+    url: &'a str,
 }
 
-pub struct TestHTMLURL {
-    url: String,
+
+pub struct TestHTMLURL<'a> {
+    url: &'a str,
 }
 
-impl BeebURL {
+impl<'a> BeebURL<'a> {
     pub fn load_document(&self) -> IplayerDocument {
-       let resp = reqwest::get(self.url);
+        let url = self.url.into_url();
+       let resp = reqwest::get(url);
         match resp {
            Err(e) => panic!(e),
             Ok(body) => {
@@ -35,7 +39,7 @@ impl BeebURL {
     }
 }
 
-impl TestHTMLURL {
+impl<'a> TestHTMLURL<'a> {
     pub fn load_document(&self) -> IplayerDocument {
        IplayerDocument {idoc: select::document::Document::from(self.url) }
     }
