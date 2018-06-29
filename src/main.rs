@@ -18,14 +18,17 @@ pub struct  BeebURL<'a> {
 }
 
 
+
 pub struct TestHTMLURL<'a> {
     url: &'a str,
 }
 
+
 impl<'a> BeebURL<'a> {
     pub fn load_document(&self) -> IplayerDocument {
-        let url = self.url.into_url();
-       let resp = reqwest::get(url);
+        let uri = Url::parse(self.url);
+        let uri = uri.into_url();
+       let resp = reqwest::get(uri);
         match resp {
            Err(e) => panic!(e),
             Ok(body) => {
