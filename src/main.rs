@@ -3,11 +3,11 @@ extern crate reqwest;
 extern crate select;
 extern crate serde;
 extern crate serde_json;
+extern crate url;
 
 use select::predicate::{Class, Name, Predicate};
 use std::thread;
-use reqwest::Url;
-use reqwest::UrlError;
+use url::{Url, ParseError};
 
 pub struct IplayerDocument {
     idoc: select::document::Document,
@@ -26,8 +26,7 @@ pub struct TestHTMLURL<'a> {
 
 impl<'a> BeebURL<'a> {
     pub fn load_document(&self) -> IplayerDocument {
-        let uri = Url::parse(self.url);
-        let uri = uri.into_url();
+        let uri = Url::parse(self.url).unwrap();
        let resp = reqwest::get(uri);
         match resp {
            Err(e) => panic!(e),
