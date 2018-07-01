@@ -227,7 +227,8 @@ impl<'a> IplayerNode<'a> {
     }
 
     fn find_synopsis(&self) -> String {
-        self.node.find(Class("synopsis")).next().unwrap().text()
+        self.node.find(Class("content-item__info__secondary")
+            .descendant(Class("content-item__description"))).next().unwrap().text()
     }
 }
 
