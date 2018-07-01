@@ -321,13 +321,13 @@ mod tests {
         assert_eq!(&idoc.idoc.find(Name("h1")).next().unwrap().text(), "Food");
         let dn = &idoc.idoc.find(Class("content-item")).next().unwrap();
         let inode = IplayerNode { node: *dn };
-        assert_eq!(inode.find_title(), "The Big Crash Diet");
-        assert_eq!(inode.find_subtitle(), Some("Reversioned Series: 16. Letter P".to_string()));
-        assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b04w5mf0/the-a-to-z-of-tv-cooking-reversioned-series-16-letter-p".to_string());
-        assert_eq!(inode.find_thumbnail(), "https://ichef.bbci.co.uk/images/ic/336x189/p02dd1vv.jpg".to_string());
+        assert_eq!(inode.find_title(), "The Big Crash Diet Experiment");
+        assert_eq!(inode.find_subtitle(), None);
+        assert_eq!(inode.find_url(), "http://www.bbc.co.uk/iplayer/episode/b0b53xqs/the-big-crash-diet-experiment".to_string());
+        assert_eq!(inode.find_thumbnail(), "https://ichef.bbci.co.uk/images/ic/304x171/p067xj99.jpg".to_string());
         let prog = Programme::new(inode);
-        assert_eq!(prog.title, "The A to Z of TV Cooking");
-        assert_eq!(prog.synopsis, "John Torode serves up a selection of cookery clips linked by the letter P.");
+        assert_eq!(prog.title, "The Big Crash Diet Experiment");
+        assert_eq!(prog.synopsis, "Dr Javid Abdelmoneim and four overweight volunteers put crash dieting to the test.");
     }
 
     //#[test]
