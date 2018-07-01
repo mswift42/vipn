@@ -191,7 +191,8 @@ impl<'a> IplayerNode<'a> {
 
     fn find_subtitle(&self) -> Option<String> {
         let sub = self.node
-            .find(Class("secondary").descendant(Class("subtitle")))
+            .find(Class("content-item__info-primary")
+                .descendant(Class("content-item__description")))
             .next();
         match sub {
             None => None,
