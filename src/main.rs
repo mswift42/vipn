@@ -239,7 +239,7 @@ struct IplayerSelection<'a> {
 
 impl<'a> IplayerSelection<'a> {
     fn new(inode: IplayerNode) -> IplayerSelection {
-        match inode.node.find(Class("view-more-container")).next() {
+        match inode.node.find(Class("lnk")).next() {
             None => IplayerSelection {
                 programme: Some(Programme::new(inode)),
                 extra_prog_page: None,
@@ -336,7 +336,7 @@ mod tests {
             idoc: select::document::Document::from(include_str!("../testhtml/food1.html")),
         };
         let sels = idoc.selection_results();
-        assert_eq!(sels.len(), 17);
+        assert_eq!(sels.len(), 26);
         let prog1_page = sels[1].extra_prog_page.unwrap();
         assert!(sels[1].programme.is_none());
         assert_eq!(prog1_page, "/iplayer/episodes/p05jv04g");
