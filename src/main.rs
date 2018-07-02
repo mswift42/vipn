@@ -53,7 +53,7 @@ pub trait DocumentLoader {
 impl IplayerDocument {
     fn selection_results(&self) -> Vec<IplayerSelection> {
         self.idoc
-            .find(Class("list-item-inner"))
+            .find(Class("content-item"))
             .map(|node| {
                 let inode = IplayerNode { node };
                 IplayerSelection::new(inode)
@@ -330,7 +330,7 @@ mod tests {
         assert_eq!(prog.synopsis, "Dr Javid Abdelmoneim and four overweight volunteers put crash dieting to the test.");
     }
 
-    //#[test]
+    #[test]
     fn test_iplayer_selections() {
         let idoc = IplayerDocument {
             idoc: select::document::Document::from(include_str!("../testhtml/food1.html")),
