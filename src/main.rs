@@ -337,13 +337,13 @@ mod tests {
         };
         let sels = idoc.selection_results();
         assert_eq!(sels.len(), 26);
-        let prog1_page = sels[2].extra_prog_page.unwrap();
-        assert_eq!(prog1_page, "/iplayer/episodes/p05jv04g");
+        let prog1_page = sels[1].extra_prog_page.unwrap();
+        assert_eq!(prog1_page, "testhtml/britains_best_home_cook.html");
         let prog17_page = sels[16].extra_prog_page.unwrap();
-        assert_eq!(prog17_page, "/iplayer/episodes/b09l5mdv");
+        assert_eq!(prog17_page, "testhtml/million_pund_menu.html");
         assert!(sels[16].programme.is_none());
         let prog16_page = sels[15].extra_prog_page.unwrap();
-        assert_eq!(prog16_page, "/iplayer/episodes/b07x182s");
+        assert_eq!(prog16_page, "testhtml/madhur_jaffreys_flavours_of_india.html");
         assert!(sels[15].programme.is_none());
     }
 
