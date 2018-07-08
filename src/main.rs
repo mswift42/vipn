@@ -5,9 +5,13 @@ extern crate serde;
 extern crate serde_json;
 extern crate url;
 
+#[macro_use] extern crate failure;
+
 use select::predicate::{Class, Name, Predicate};
 use std::thread;
 use url::{Url, ParseError};
+
+use failure::Error;
 
 pub struct IplayerDocument {
     idoc: select::document::Document,
@@ -48,7 +52,7 @@ impl<'a> TestHTMLURL<'a> {
 }
 
 pub trait DocumentLoader {
-    fn load_document(&self) -> IplayerDocument;
+    fn load_document(&self) -> Result<IplayerDocument, Error>;
 }
 impl IplayerDocument {
     fn selection_results(&self) -> Vec<IplayerSelection> {
@@ -347,7 +351,7 @@ mod tests {
         assert!(sels[15].programme.is_none());
     }
 
-    // #[test]
+    #[test]
     fn test_programmes() {
         let idoc = IplayerDocument {
             idoc: select::document::Document::from(include_str!("../testhtml/food1.html")),
@@ -358,13 +362,13 @@ mod tests {
             nextdocs: vec![],
         };
         let progs = mcd.programmes();
-        assert_eq!(progs[0].title, "The A to Z of TV Cooking");
-        assert_eq!(progs.len(), 4);
+        assert_eq!(progs[0].title, "The Big Crash Diet Experiment");
+        assert_eq!(progs.len(), 6);
         let pages = mcd.extra_program_pages();
-        assert_eq!(pages[0], "/iplayer/episodes/p05jv04g");
-        assert_eq!(pages.len(), 13);
-        assert_eq!(pages[1], "/iplayer/episodes/b03mzc66");
-        assert_eq!(pages[2], "/iplayer/episodes/b08f17c0");
+        assert_eq!(pages[0], "testhtml/britains_best_home_cook.html");
+        assert_eq!(pages.len(), 20);
+        assert_eq!(pages[1], "testhtml/britains_fat_fight.html");
+        assert_eq!(pages[2], "testhtml/caribbean_food_made_easy.html");
     }
 
     // #[test]
