@@ -6,27 +6,28 @@ extern crate url;
 
 use select::predicate::{Class, Name, Predicate};
 use std::thread;
+use std::time;
 use url::{Url, ParseError};
 
 use failure::Error;
 
-pub struct IplayerDocument {
+struct IplayerDocument {
     idoc: select::document::Document,
 }
 
-pub struct  BeebURL<'a> {
+struct  BeebURL<'a> {
     url: &'a str,
 }
 
 
 
-pub struct TestHTMLURL<'a> {
+struct TestHTMLURL<'a> {
     url: &'a str,
 }
 
 
 impl<'a> BeebURL<'a> {
-    pub fn load_document(&self) -> IplayerDocument {
+    fn load_document(&self) -> IplayerDocument {
         let uri = Url::parse(self.url).unwrap();
         let resp = reqwest::get(uri);
         match resp {
@@ -43,7 +44,7 @@ impl<'a> BeebURL<'a> {
 }
 
 impl<'a> TestHTMLURL<'a> {
-    pub fn load_document(&self) -> IplayerDocument {
+    fn load_document(&self) -> IplayerDocument {
         IplayerDocument {idoc: select::document::Document::from(self.url) }
     }
 }
@@ -71,7 +72,7 @@ impl IplayerDocument {
 
 }
 
-pub struct ProgramPage {
+struct ProgramPage {
     doc: IplayerDocument,
 }
 
@@ -105,14 +106,14 @@ impl<'a> ProgramPage {
 
 pub struct ProgrammeDB<'a> {
     pub categories: Vec<Category<'a>>,
-    pub saved: std::time::SystemTime,
+    pub saved: time::SystemTime,
 }
 
 impl<'a> ProgrammeDB<'a> {
     pub fn new(cats: Vec<Category<'a>>) -> ProgrammeDB<'a> {
         ProgrammeDB {
             categories: cats,
-            saved: std::time::SystemTime::now(),
+            saved: time::SystemTime::now(),
         }
     }
 }
@@ -177,7 +178,7 @@ impl<'a> Category<'a> {
 }
 
 // type IplayerNode<'a> = select::ode::Node<'a>;
-pub struct IplayerNode<'a> {
+struct IplayerNode<'a> {
     pub node: select::node::Node<'a>,
 }
 
