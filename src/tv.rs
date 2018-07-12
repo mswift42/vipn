@@ -49,7 +49,7 @@ impl<'a> TestHTMLURL<'a> {
     }
 }
 
-pub trait DocumentLoader {
+trait DocumentLoader {
     fn load_document(&self) -> Result<IplayerDocument, Error>;
 }
 impl IplayerDocument {

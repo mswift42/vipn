@@ -10,6 +10,5 @@ mod tv;
 
 
 fn main() {
-    println!("Hello, world!");
 }
 
